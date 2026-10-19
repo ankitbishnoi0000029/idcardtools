@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://idcardtools.com/sitemap.xml
+
+Sitemap: https://idcardtools.com/sitemap-image-tools.xml
