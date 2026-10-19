@@ -1,243 +1,356 @@
-import type { ReactNode } from "react";
+"use client";
 
-const SITE_URL = "https://idcardtools.com";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, MapPin, Phone, Send, CheckCircle2, Clock } from 'lucide-react';
 
-type SchemaRecord = Record<string, unknown>;
+// ✅ REAL contact info — single source of truth
+const CONTACT_EMAIL = "hello@idcardtools.com";
+const CONTACT_PHONE_DISPLAY = "+91 86995-92500";
+const CONTACT_PHONE_SCHEMA = "+918699592500";
 
-export function JsonLd({ data }: { data: SchemaRecord | SchemaRecord[] }) {
+const contactMethods = [
+  {
+    n: '01',
+    icon: Mail,
+    label: 'Email',
+    value: CONTACT_EMAIL,                          // ✅ hello@
+    href: `mailto:${CONTACT_EMAIL}`,               // ✅ matches display
+    response: 'Under 2 hours',
+  },
+  {
+    n: '02',
+    icon: Phone,
+    label: 'Phone',
+    value: CONTACT_PHONE_DISPLAY,                  // ✅ display format
+    href: `tel:${CONTACT_PHONE_SCHEMA}`,           // ✅ REAL number click-to-call
+    response: 'Mon-Fri, 10AM-6PM',
+  },
+  {
+    n: '03',
+    icon: MapPin,
+    label: 'Office',
+    value: 'Indiranagar, Bangalore',
+    href: '#',                                      // appointment only
+    response: 'By appointment only',
+  },
+];
+
+// ⚠️ Ye FAQs page pe visible hain
+// Schema FAQ (page.tsx mein) mein 6 hain — mismatch issue
+// Recommendation: Yahan 6 add karo YA schema mein 3 rakho
+const faqs = [
+  { q: 'How fast do you reply?', a: 'Usually within 2 hours on weekdays. Weekends may take up to 24 hours.' },
+  { q: 'Do you offer phone support?', a: 'Yes, for PVC card orders and bulk inquiries. Email for everything else.' },
+  { q: 'Can I visit your office?', a: 'Yes, by appointment. Email us to schedule a visit.' },
+];
+
+export default function ContactPage() {
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      // ⚠️ TODO: Actual submission endpoint yahan lagao
+      // Option A: Next.js API route (/api/contact)
+      // Option B: Formspree, Resend, EmailJS, etc.
+      // Option C: Mailto fallback (worst case, but works)
+      //
+      // Example with API route:
+      // const res = await fetch('/api/contact', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(formData),
+      // });
+      // if (!res.ok) throw new Error('Failed');
+
+      // ⚠️ TEMPORARY — mailto fallback (form actually opens email client)
+      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        formData.subject
+      )}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+      )}`;
+      window.location.href = mailtoUrl;
+
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setSubmitted(false), 6000);
+    } catch (err) {
+      setError('Something went wrong. Please email us directly at ' + CONTACT_EMAIL);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
-      }}
-    />
+    <div className="relative bg-[#f4f1ea] text-[#0a0a0a] pt-16 pb-24 overflow-hidden">
+
+      <div className="absolute inset-0 pointer-events-none hidden md:block">
+        <div className="container mx-auto px-8 h-full relative max-w-[1400px]">
+          <div className="absolute left-8 top-0 bottom-0 w-px bg-black/[0.05]" />
+          <div className="absolute left-1/3 top-0 bottom-0 w-px bg-black/[0.05]" />
+          <div className="absolute left-2/3 top-0 bottom-0 w-px bg-black/[0.05]" />
+          <div className="absolute right-8 top-0 bottom-0 w-px bg-black/[0.05]" />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-8 relative max-w-[1400px]">
+
+        {/* Top meta */}
+        <div className="flex items-center justify-between pb-6 mb-16 border-b border-black/[0.12]">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#ff6a00] animate-pulse" />
+            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/60">
+              Contact — We&apos;re Listening
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-[11px] font-mono uppercase tracking-[0.2em] text-black/40">
+            <span>Avg. Response: 2h</span>
+            <span>·</span>
+            <span>Based in Bangalore</span>
+          </div>
+        </div>
+
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-20 items-end"
+        >
+          <div className="lg:col-span-7">
+            <div className="text-[11px] font-mono uppercase tracking-[0.25em] text-black/40 mb-5">
+              Chapter 07 — Say Hello
+            </div>
+            <h1
+              className="text-[48px] md:text-[68px] lg:text-[80px] leading-[0.98] tracking-[-0.02em]"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              Let&apos;s talk about
+              <br />
+              your <span className="italic text-[#ff6a00]">documents.</span>
+            </h1>
+          </div>
+          <div className="lg:col-span-5 lg:pb-4">
+            <p className="text-[15px] md:text-[16px] leading-[1.7] text-black/60 max-w-md">
+              Questions about a tool, a bulk order, or a partnership?
+              Drop us a message and a real human will reply.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Main grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-24">
+
+          {/* Contact form */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+            className="lg:col-span-7"
+          >
+            <div className="p-8 md:p-10 rounded-[22px] bg-white border border-black/[0.06]">
+              <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/40 mb-8">
+                Send us a message
+              </div>
+
+              {submitted ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="py-16 text-center"
+                >
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle2 size={28} className="text-emerald-500" />
+                  </div>
+                  <h3
+                    className="text-[24px] text-black mb-3"
+                    style={{ fontFamily: 'Georgia, serif' }}
+                  >
+                    Almost there!
+                  </h3>
+                  <p className="text-[14px] text-black/55">
+                    Your email app should have opened. Please send the email to reach us.
+                  </p>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="contact-name" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-black/40 mb-3">
+                        Your Name
+                      </label>
+                      <input
+                        id="contact-name"
+                        name="name"
+                        type="text"
+                        required
+                        autoComplete="name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full bg-transparent border-b border-black/20 focus:border-[#ff6a00] outline-none py-3 text-[15px] text-black placeholder:text-black/25 transition-colors"
+                        placeholder="Priya Sharma"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="contact-email" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-black/40 mb-3">
+                        Email Address
+                      </label>
+                      <input
+                        id="contact-email"
+                        name="email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full bg-transparent border-b border-black/20 focus:border-[#ff6a00] outline-none py-3 text-[15px] text-black placeholder:text-black/25 transition-colors"
+                        placeholder="priya@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="contact-subject" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-black/40 mb-3">
+                      Subject
+                    </label>
+                    <input
+                      id="contact-subject"
+                      name="subject"
+                      type="text"
+                      required
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      className="w-full bg-transparent border-b border-black/20 focus:border-[#ff6a00] outline-none py-3 text-[15px] text-black placeholder:text-black/25 transition-colors"
+                      placeholder="Bulk PVC card order for my firm"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="contact-message" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-black/40 mb-3">
+                      Message
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      required
+                      rows={5}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full bg-transparent border-b border-black/20 focus:border-[#ff6a00] outline-none py-3 text-[15px] text-black placeholder:text-black/25 resize-none transition-colors"
+                      placeholder="Tell us what you need..."
+                    />
+                  </div>
+
+                  {error && (
+                    <div className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                      {error}
+                    </div>
+                  )}
+
+                  <div className="pt-4">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="group inline-flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <span className="relative text-[15px] font-medium text-black pb-1">
+                        {loading ? 'Sending...' : 'Send message'}
+                        <span className="absolute left-0 right-0 bottom-0 h-px bg-black group-hover:bg-[#ff6a00] transition-colors" />
+                      </span>
+                      <span className="w-10 h-10 rounded-full border border-black/20 group-hover:border-[#ff6a00] group-hover:bg-[#ff6a00] flex items-center justify-center transition-all duration-300">
+                        <Send size={15} className="text-black group-hover:text-white transition-colors" />
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Contact methods */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
+            className="lg:col-span-5"
+          >
+            <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/40 mb-8">
+              Other ways to reach us
+            </div>
+
+            <div className="space-y-6">
+              {contactMethods.map((method, i) => {
+                const Icon = method.icon;
+                return (
+                  <motion.a
+                    key={method.n}
+                    href={method.href}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.1 }}
+                    className="group block p-6 rounded-[18px] bg-white border border-black/[0.06] hover:border-[#ff6a00]/40 hover:-translate-y-0.5 transition-all duration-500"
+                  >
+                    <div className="flex items-start gap-5">
+                      <div className="shrink-0 w-11 h-11 rounded-2xl bg-[#f4f1ea] group-hover:bg-[#ff6a00] flex items-center justify-center transition-all duration-500">
+                        <Icon size={18} strokeWidth={1.75} className="text-black/70 group-hover:text-white transition-colors duration-500" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-black/40">
+                            {method.label}
+                          </span>
+                          <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-black/30">
+                            {method.n}
+                          </span>
+                        </div>
+                        <div
+                          className="text-[18px] text-black mb-1 group-hover:text-[#ff6a00] transition-colors"
+                          style={{ fontFamily: 'Georgia, serif' }}
+                        >
+                          {method.value}
+                        </div>
+                        <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.15em] text-black/40">
+                          <Clock size={10} />
+                          {method.response}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.a>
+                );
+              })}
+            </div>
+
+            <div className="mt-10 pt-8 border-t border-black/[0.08]">
+              <div className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/40 mb-5">
+                Quick answers
+              </div>
+              <div className="space-y-4">
+                {faqs.map((faq, i) => (
+                  <div key={i} className="pb-4 border-b border-black/[0.06] last:border-0">
+                    <div
+                      className="text-[14px] text-black mb-1"
+                      style={{ fontFamily: 'Georgia, serif' }}
+                    >
+                      {faq.q}
+                    </div>
+                    <div className="text-[12px] text-black/55 font-light leading-[1.6]">
+                      {faq.a}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+      </div>
+    </div>
   );
-}
-
-export function organizationSchema(): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": `${SITE_URL}#organization`,
-    name: "idcardtools",
-    alternateName: ["ID Card Tools", "idcardtools.com"],
-    url: SITE_URL,
-    logo: {
-      "@type": "ImageObject",
-      url: `${SITE_URL}/favicon.ico`,
-      width: 512,
-      height: 512,
-    },
-    description:
-      "idcardtools provides free, privacy-first PDF and image tools plus premium E-Aadhaar PVC card printing across India.",
-    foundingDate: "2023",
-    email: "info@idcardtools.com",
-    telephone: "+91-9876543210",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Indiranagar",
-      addressLocality: "Bangalore",
-      addressRegion: "Karnataka",
-      postalCode: "560038",
-      addressCountry: "IN",
-    },
-    contactPoint: [
-      {
-        "@type": "ContactPoint",
-        telephone: "+91-9876543210",
-        email: "info@idcardtools.com",
-        contactType: "customer support",
-        areaServed: "IN",
-        availableLanguage: ["English", "Hindi", "Kannada"],
-      },
-    ],
-  };
-}
-
-export function webSiteSchema(): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": `${SITE_URL}#website`,
-    name: "idcardtools",
-    alternateName: "ID Card Tools",
-    url: SITE_URL,
-    description:
-      "Free online PDF tools, image tools, and E-Aadhaar PVC card printing information.",
-    inLanguage: "en-IN",
-    publisher: { "@id": `${SITE_URL}#organization` },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${SITE_URL}/pdf-tools`,
-      },
-      "query-input": "required name=query",
-    },
-  };
-}
-
-export function breadcrumbSchema(items: { name: string; path: string }[]): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: item.path === "/" ? SITE_URL : `${SITE_URL}${item.path}`,
-    })),
-  };
-}
-
-export function faqSchema(items: { question: string; answer: string }[]): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-  };
-}
-
-export function softwareApplicationSchema(options: {
-  name: string;
-  description: string;
-  path: string;
-}): SchemaRecord {
-  const url = `${SITE_URL}${options.path}`;
-  return {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: options.name,
-    applicationCategory: "WebApplication",
-    operatingSystem: "Any",
-    description: options.description,
-    url,
-    isAccessibleForFree: true,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "INR",
-      availability: "https://schema.org/InStock",
-    },
-    publisher: { "@id": `${SITE_URL}#organization` },
-  };
-}
-
-export function itemListSchema(options: {
-  name: string;
-  description: string;
-  path: string;
-  entries: { name: string; path: string }[];
-}): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: options.name,
-    description: options.description,
-    numberOfItems: options.entries.length,
-    itemListElement: options.entries.map((entry, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: entry.name,
-      url: `${SITE_URL}${entry.path}`,
-    })),
-  };
-}
-
-export function howToSchema(options: {
-  name: string;
-  description: string;
-  steps: { name: string; text: string }[];
-}): SchemaRecord {
-  return {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: options.name,
-    description: options.description,
-    totalTime: "PT1M",
-    estimatedCost: {
-      "@type": "MonetaryAmount",
-      currency: "INR",
-      value: "0",
-    },
-    step: options.steps.map((step, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: step.name,
-      text: step.text,
-    })),
-  };
-}
-
-export function productSchema(options: {
-  name: string;
-  description: string;
-  path: string;
-  price?: string;
-  priceCurrency?: string;
-}): SchemaRecord {
-  const url = `${SITE_URL}${options.path}`;
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: options.name,
-    description: options.description,
-    url,
-    brand: {
-      "@type": "Brand",
-      name: "idcardtools",
-    },
-    offers: {
-      "@type": "Offer",
-      url,
-      priceCurrency: options.priceCurrency ?? "INR",
-      price: options.price ?? "0",
-      availability: "https://schema.org/InStock",
-    },
-  };
-}
-
-export function articleSchema(options: {
-  headline: string;
-  description: string;
-  path: string;
-  datePublished?: string;
-  dateModified?: string;
-}): SchemaRecord {
-  const url = `${SITE_URL}${options.path}`;
-  const today = options.dateModified ?? new Date().toISOString().slice(0, 10);
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: options.headline,
-    description: options.description,
-    url,
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": url,
-    },
-    datePublished: options.datePublished ?? today,
-    dateModified: today,
-    author: {
-      "@type": "Organization",
-      "@id": `${SITE_URL}#organization`,
-    },
-    publisher: {
-      "@type": "Organization",
-      "@id": `${SITE_URL}#organization`,
-    },
-    inLanguage: "en-IN",
-  };
-}
-
-export function faqPageScripts(items: { question: string; answer: string }[]): ReactNode {
-  return <JsonLd data={faqSchema(items)} />;
 }

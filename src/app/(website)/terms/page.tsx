@@ -4,9 +4,17 @@ import TermsPage from "@/components/terms-page";
 const SITE_URL = "https://idcardtools.com";
 const PAGE_URL = `${SITE_URL}/terms`;
 
-// ============================================
-// SEO METADATA
-// ============================================
+// ✅ REAL contact info
+const CONTACT_EMAIL = "hello@idcardtools.com";
+const CONTACT_PHONE = "+918699592500";
+const CONTACT_PHONE_DISPLAY = "+91 86995-92500";
+
+// ═══════════════════════════════════════════════
+// ⚠️ VERIFY KARO:
+// 1. Address: Indiranagar, Bangalore — REAL hai?
+// 2. Dates: Published 2023-06-01, Modified 2026-01-01 (update karo)
+// 3. Legal email: `legal@` exist karta hai? Agar nahi → hello@ use karo
+// ═══════════════════════════════════════════════
 
 export const metadata: Metadata = {
   title: "Terms of Service — Rules for Using idcardtools",
@@ -19,17 +27,13 @@ export const metadata: Metadata = {
     "terms of service pdf tools india",
     "idcardtools refund policy",
     "pvc card refund policy",
-    "pvc card order terms",
     "aadhaar printing terms of service",
     "user agreement pdf tools",
     "idcardtools legal terms",
     "free pdf tools license",
     "commercial use pdf tools",
-    "idcardtools acceptable use policy",
-    "pdf tools india terms",
     "digital personal data protection act compliance",
     "india legal pdf tools",
-    "bangalore pdf tools terms",
     "idcardtools governing law",
   ],
   authors: [{ name: "idcardtools Legal Team", url: SITE_URL }],
@@ -52,29 +56,23 @@ export const metadata: Metadata = {
     countryName: "India",
     images: [
       {
-        url: `${SITE_URL}/aitools.png`,
+        url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "idcardtools Terms of Service",
-        type: "image/png",
-      },
-      {
-        url: `${SITE_URL}/aitools.png`,
-        width: 1200,
-        height: 1200,
-        alt: "idcardtools Terms",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@idcardtools",
-    creator: "@idcardtools",
+    // ⚠️ Real handle hone par uncomment karo
+    // site: "@idcardtools",
+    // creator: "@idcardtools",
     title: "Terms of Service — idcardtools",
     description:
       "Plain-English terms of service. Free tools, refund policy, and your rights.",
-    images: [`${SITE_URL}/aitools.png`],
+    images: [`${SITE_URL}/og-image.png`],
   },
   robots: {
     index: true,
@@ -89,20 +87,14 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  other: {
-    "article:published_time": "2023-06-01",
-    "article:modified_time": "2025-10-15",
-    "article:section": "Legal",
-    "legal:terms_contact": "legal@idcardtools.com",
-    "legal:jurisdiction": "Bangalore, Karnataka, India",
-  },
+  // ❌ REMOVED: article:* and legal:* non-standard tags
 };
 
-// ============================================
+// ═══════════════════════════════════════════════
 // STRUCTURED DATA
-// ============================================
+// ═══════════════════════════════════════════════
 
-// 1. WebPage Schema
+// 1. WebPage (single unified schema — no duplicate)
 const termsPageSchema = {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -114,9 +106,10 @@ const termsPageSchema = {
   url: PAGE_URL,
   inLanguage: "en-IN",
   datePublished: "2023-06-01",
-  dateModified: "2025-10-15",
+  dateModified: "2026-01-01", // ✅ Update karo actual modification date se
   isPartOf: {
     "@type": "WebSite",
+    "@id": `${SITE_URL}#website`,
     name: "idcardtools",
     url: SITE_URL,
   },
@@ -129,28 +122,29 @@ const termsPageSchema = {
     "@type": "Audience",
     audienceType: "Users of idcardtools services",
   },
-  publisher: {
-    "@type": "Organization",
-    "@id": `${SITE_URL}#organization`,
-    name: "idcardtools",
-    url: SITE_URL,
-    logo: {
-      "@type": "ImageObject",
-      url: `${SITE_URL}/favicon.ico`,
-      width: 512,
-      height: 512,
-    },
+  publisher: { "@id": `${SITE_URL}#organization` },
+  breadcrumb: { "@id": `${PAGE_URL}#breadcrumb` },
+  // ✅ Added: jurisdiction info
+  jurisdiction: {
+    "@type": "AdministrativeArea",
+    name: "Karnataka, India",
   },
-  breadcrumb: {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Terms of Service", item: PAGE_URL },
-    ],
-  },
+  // ✅ Added: sections list (hasPart)
+  hasPart: [
+    { "@type": "WebPageElement", name: "Acceptance of Terms" },
+    { "@type": "WebPageElement", name: "The Service" },
+    { "@type": "WebPageElement", name: "Your Account" },
+    { "@type": "WebPageElement", name: "Acceptable Use" },
+    { "@type": "WebPageElement", name: "Payments & Refunds" },
+    { "@type": "WebPageElement", name: "Intellectual Property" },
+    { "@type": "WebPageElement", name: "Limitation of Liability" },
+    { "@type": "WebPageElement", name: "Termination" },
+    { "@type": "WebPageElement", name: "Changes to These Terms" },
+    { "@type": "WebPageElement", name: "Governing Law" },
+  ],
 };
 
-// 2. Organization Schema (referenced)
+// 2. Organization (referenced)
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -159,27 +153,12 @@ const organizationSchema = {
   url: SITE_URL,
   logo: {
     "@type": "ImageObject",
-    url: `${SITE_URL}/favicon.ico`,
+    url: `${SITE_URL}/icons/icon-512.png`, // ✅ PNG, not ICO
     width: 512,
     height: 512,
   },
-  email: "legal@idcardtools.com",
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      contactType: "legal",
-      email: "legal@idcardtools.com",
-      areaServed: "Worldwide",
-      availableLanguage: ["English"],
-    },
-    {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: "info@idcardtools.com",
-      telephone: "+91-9876543210",
-      areaServed: "IN",
-    },
-  ],
+  email: CONTACT_EMAIL,        // ✅ hello@idcardtools.com
+  telephone: CONTACT_PHONE,    // ✅ +918699592500
   address: {
     "@type": "PostalAddress",
     streetAddress: "Indiranagar",
@@ -188,9 +167,27 @@ const organizationSchema = {
     postalCode: "560038",
     addressCountry: "IN",
   },
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      email: CONTACT_EMAIL,
+      telephone: CONTACT_PHONE,
+      contactType: "customer support",
+      areaServed: "Worldwide",
+      availableLanguage: ["English", "Hindi"],
+    },
+    // ⚠️ Agar legal@idcardtools.com REAL hai (exists/forwards), toh uncomment karo:
+    // {
+    //   "@type": "ContactPoint",
+    //   contactType: "legal",
+    //   email: "legal@idcardtools.com",
+    //   areaServed: "Worldwide",
+    //   availableLanguage: ["English"],
+    // },
+  ],
 };
 
-// 3. BreadcrumbList Schema
+// 3. BreadcrumbList (standalone — referenced by WebPage)
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -211,7 +208,7 @@ const breadcrumbSchema = {
   ],
 };
 
-// 4. FAQPage Schema
+// 4. FAQPage — ⚠️ Ye 10 FAQs page pe VISIBLE hone chahiye
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -294,55 +291,19 @@ const faqSchema = {
       name: "What happens if a PVC card is lost in transit?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "If your PVC card is lost in transit, we re-print and re-ship it at no extra cost. Just email info@idcardtools.com with your order number and we'll take care of it.",
+        text: `If your PVC card is lost in transit, we re-print and re-ship it at no extra cost. Just email ${CONTACT_EMAIL} with your order number and we'll take care of it.`,
       },
     },
   ],
 };
 
-// 5. TermsOfService Schema (Schema.org type)
-const termsOfServiceSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "@id": `${PAGE_URL}#terms-of-service`,
-  name: "idcardtools Terms of Service",
-  url: PAGE_URL,
-  datePublished: "2023-06-01",
-  dateModified: "2025-10-15",
-  inLanguage: "en-IN",
-  publisher: {
-    "@id": `${SITE_URL}#organization`,
-  },
-  jurisdiction: {
-    "@type": "AdministrativeArea",
-    name: "Karnataka, India",
-  },
-  audience: {
-    "@type": "Audience",
-    audienceType: "Global",
-  },
-  hasPart: [
-    { "@type": "WebPageElement", name: "Acceptance of Terms" },
-    { "@type": "WebPageElement", name: "The Service" },
-    { "@type": "WebPageElement", name: "Your Account" },
-    { "@type": "WebPageElement", name: "Acceptable Use" },
-    { "@type": "WebPageElement", name: "Payments & Refunds" },
-    { "@type": "WebPageElement", name: "Intellectual Property" },
-    { "@type": "WebPageElement", name: "Limitation of Liability" },
-    { "@type": "WebPageElement", name: "Termination" },
-    { "@type": "WebPageElement", name: "Changes to These Terms" },
-    { "@type": "WebPageElement", name: "Governing Law" },
-  ],
-};
-
-// ============================================
+// ═══════════════════════════════════════════════
 // PAGE COMPONENT
-// ============================================
+// ═══════════════════════════════════════════════
 
 export default function Page() {
   return (
     <>
-      {/* Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(termsPageSchema) }}
@@ -359,12 +320,7 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(termsOfServiceSchema) }}
-      />
 
-      {/* Main content */}
       <TermsPage />
     </>
   );

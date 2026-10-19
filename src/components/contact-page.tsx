@@ -4,21 +4,26 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, CheckCircle2, Clock } from 'lucide-react';
 
+// ✅ REAL contact info — single source of truth
+const CONTACT_EMAIL = "hello@idcardtools.com";
+const CONTACT_PHONE_DISPLAY = "+91 86995-92500";
+const CONTACT_PHONE_SCHEMA = "+918699592500";
+
 const contactMethods = [
   {
     n: '01',
     icon: Mail,
     label: 'Email',
-    value: 'info@idcardtools.com',
-    href: 'mailto:info@idcardtools.com',
+    value: CONTACT_EMAIL,                          // ✅ hello@
+    href: `mailto:${CONTACT_EMAIL}`,               // ✅ matches display
     response: 'Under 2 hours',
   },
   {
     n: '02',
     icon: Phone,
     label: 'Phone',
-    value: '+91 86995-92500',
-    href: 'tel:+919876543210',
+    value: CONTACT_PHONE_DISPLAY,                  // ✅ display format
+    href: `tel:${CONTACT_PHONE_SCHEMA}`,           // ✅ REAL number click-to-call
     response: 'Mon-Fri, 10AM-6PM',
   },
   {
@@ -26,11 +31,14 @@ const contactMethods = [
     icon: MapPin,
     label: 'Office',
     value: 'Indiranagar, Bangalore',
-    href: '#',
+    href: '#',                                      // appointment only
     response: 'By appointment only',
   },
 ];
 
+// ⚠️ Ye FAQs page pe visible hain
+// Schema FAQ (page.tsx mein) mein 6 hain — mismatch issue
+// Recommendation: Yahan 6 add karo YA schema mein 3 rakho
 const faqs = [
   { q: 'How fast do you reply?', a: 'Usually within 2 hours on weekdays. Weekends may take up to 24 hours.' },
   { q: 'Do you offer phone support?', a: 'Yes, for PVC card orders and bulk inquiries. Email for everything else.' },
@@ -40,11 +48,44 @@ const faqs = [
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    setLoading(true);
+    setError(null);
+
+    try {
+      // ⚠️ TODO: Actual submission endpoint yahan lagao
+      // Option A: Next.js API route (/api/contact)
+      // Option B: Formspree, Resend, EmailJS, etc.
+      // Option C: Mailto fallback (worst case, but works)
+      //
+      // Example with API route:
+      // const res = await fetch('/api/contact', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(formData),
+      // });
+      // if (!res.ok) throw new Error('Failed');
+
+      // ⚠️ TEMPORARY — mailto fallback (form actually opens email client)
+      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        formData.subject
+      )}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+      )}`;
+      window.location.href = mailtoUrl;
+
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setSubmitted(false), 6000);
+    } catch (err) {
+      setError('Something went wrong. Please email us directly at ' + CONTACT_EMAIL);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -87,7 +128,7 @@ export default function ContactPage() {
             <div className="text-[11px] font-mono uppercase tracking-[0.25em] text-black/40 mb-5">
               Chapter 07 — Say Hello
             </div>
-            <h1 
+            <h1
               className="text-[48px] md:text-[68px] lg:text-[80px] leading-[0.98] tracking-[-0.02em]"
               style={{ fontFamily: 'Georgia, serif' }}
             >
@@ -98,7 +139,7 @@ export default function ContactPage() {
           </div>
           <div className="lg:col-span-5 lg:pb-4">
             <p className="text-[15px] md:text-[16px] leading-[1.7] text-black/60 max-w-md">
-              Questions about a tool, a bulk order, or a partnership? 
+              Questions about a tool, a bulk order, or a partnership?
               Drop us a message and a real human will reply.
             </p>
           </div>
@@ -128,14 +169,14 @@ export default function ContactPage() {
                   <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                     <CheckCircle2 size={28} className="text-emerald-500" />
                   </div>
-                  <h3 
+                  <h3
                     className="text-[24px] text-black mb-3"
                     style={{ fontFamily: 'Georgia, serif' }}
                   >
-                    Message received!
+                    Almost there!
                   </h3>
                   <p className="text-[14px] text-black/55">
-                    We&apos;ll get back to you within 2 hours.
+                    Your email app should have opened. Please send the email to reach us.
                   </p>
                 </motion.div>
               ) : (
@@ -207,13 +248,20 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  {error && (
+                    <div className="text-[12px] text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                      {error}
+                    </div>
+                  )}
+
                   <div className="pt-4">
                     <button
                       type="submit"
-                      className="group inline-flex items-center gap-3"
+                      disabled={loading}
+                      className="group inline-flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span className="relative text-[15px] font-medium text-black pb-1">
-                        Send message
+                        {loading ? 'Sending...' : 'Send message'}
                         <span className="absolute left-0 right-0 bottom-0 h-px bg-black group-hover:bg-[#ff6a00] transition-colors" />
                       </span>
                       <span className="w-10 h-10 rounded-full border border-black/20 group-hover:border-[#ff6a00] group-hover:bg-[#ff6a00] flex items-center justify-center transition-all duration-300">
@@ -262,7 +310,7 @@ export default function ContactPage() {
                             {method.n}
                           </span>
                         </div>
-                        <div 
+                        <div
                           className="text-[18px] text-black mb-1 group-hover:text-[#ff6a00] transition-colors"
                           style={{ fontFamily: 'Georgia, serif' }}
                         >
@@ -286,7 +334,7 @@ export default function ContactPage() {
               <div className="space-y-4">
                 {faqs.map((faq, i) => (
                   <div key={i} className="pb-4 border-b border-black/[0.06] last:border-0">
-                    <div 
+                    <div
                       className="text-[14px] text-black mb-1"
                       style={{ fontFamily: 'Georgia, serif' }}
                     >

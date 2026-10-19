@@ -237,7 +237,7 @@ export const AutoIdCropper = () => {
               {/* Image frame */}
               <div className="relative aspect-[4/3] rounded-[14px] overflow-hidden bg-[#f4f1ea]">
                 <Image
-                  src="/aitools.png"
+                  src="/demo.png"
                   alt="ID card being auto-cropped"
                   fill
                   className="object-cover opacity-90"

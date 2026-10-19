@@ -1,7 +1,8 @@
 {
+  "id": "/",
   "name": "idcardtools — Print E-Aadhaar PVC & Free PDF Tools",
   "short_name": "idcardtools",
-  "description": "Print E-Aadhaar on PVC cards. 31+ free PDF tools. UIDAI-compliant. Privacy-first.",
+  "description": "Print E-Aadhaar on PVC cards. 31+ free PDF tools and 30+ image tools. UIDAI-compliant. Privacy-first.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -10,24 +11,42 @@
   "theme_color": "#ff6a00",
   "lang": "en-IN",
   "dir": "ltr",
+  "prefer_related_applications": false,
   "categories": ["productivity", "utilities", "business"],
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "any",
-      "type": "image/x-icon",
-      "purpose": "any maskable"
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/favicon.ico",
-      "sizes": "any",
-      "type": "image/x-icon",
-      "purpose": "any maskable"
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/favicon.ico",
-      "sizes": "any",
-      "type": "image/x-icon"
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Home — E-Aadhaar PVC printing"
+    },
+    {
+      "src": "/screenshots/pdf-tools.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "All PDF tools in one place"
     }
   ],
   "shortcuts": [
@@ -36,21 +55,21 @@
       "short_name": "PVC enquiries",
       "description": "Contact idcardtools about PVC card printing",
       "url": "/contacts",
-      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+      "icons": [{ "src": "/icons/shortcut-contact.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Merge PDF",
       "short_name": "Merge",
       "description": "Combine multiple PDFs",
       "url": "/pdf-tools/merge",
-      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+      "icons": [{ "src": "/icons/shortcut-merge.png", "sizes": "96x96", "type": "image/png" }]
     },
     {
       "name": "Compress PDF",
       "short_name": "Compress",
       "description": "Reduce file size",
       "url": "/pdf-tools/compress",
-      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+      "icons": [{ "src": "/icons/shortcut-compress.png", "sizes": "96x96", "type": "image/png" }]
     }
   ]
 }

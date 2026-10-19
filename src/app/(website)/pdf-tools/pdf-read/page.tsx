@@ -5,7 +5,7 @@ const SITE_URL = "https://idcardtools.com";
 const PAGE_URL = `${SITE_URL}/pdf-tools/pdf-read`;
 
 // ============================================
-// FAQ DATA
+// FAQ DATA (unchanged)
 // ============================================
 
 const faqItems = [
@@ -32,7 +32,7 @@ const faqItems = [
 ];
 
 // ============================================
-// HOW TO STEPS
+// HOW TO STEPS (unchanged)
 // ============================================
 
 const howToSteps = [
@@ -42,7 +42,7 @@ const howToSteps = [
 ];
 
 // ============================================
-// LUMIN FEATURES
+// LUMIN FEATURES (unchanged)
 // ============================================
 
 const luminFeatures = [
@@ -55,20 +55,21 @@ const luminFeatures = [
 ];
 
 // ============================================
-// TESTIMONIALS
+// TESTIMONIALS — ✅ SAME DATA used in schema
+// ⚠️ Isko `page.tsx` ke saath export karo aur schema mein use karo
 // ============================================
 
 const testimonials = [
-  { name: "Monalisa Das", date: "Oct 6", text: "The App is very easy to use it, Nice app.", rating: 5 },
-  { name: "Wellington Picanço", date: "Oct 5", text: "Top... Adorei o app", rating: 5 },
-  { name: "Luis Ramirez Cuadros", date: "Oct 5", text: "excelente documento, muy util para cuando llegan documentos pdf", rating: 5 },
-  { name: "Junior Luiz", date: "Oct 4", text: "the best pdf editor in the world", rating: 5 },
-  { name: "Dee", date: "Oct 4", text: "This has made getting documents signed so much easier and efficient.", rating: 5 },
-  { name: "Avril Etsebeth Clench", date: "Oct 4", text: "Signing documents with multiple signatures and then only having to have one document instead of many copies has been great.", rating: 5 },
+  { name: "Monalisa Das", date: "2026-10-06", text: "The App is very easy to use it, Nice app.", rating: 5 },
+  { name: "Wellington Picanço", date: "2026-10-05", text: "Top... Adorei o app", rating: 5 },
+  { name: "Luis Ramirez Cuadros", date: "2026-10-05", text: "excelente documento, muy util para cuando llegan documentos pdf", rating: 5 },
+  { name: "Junior Luiz", date: "2026-10-04", text: "the best pdf editor in the world", rating: 5 },
+  { name: "Dee", date: "2026-10-04", text: "This has made getting documents signed so much easier and efficient.", rating: 5 },
+  { name: "Avril Etsebeth Clench", date: "2026-10-04", text: "Signing documents with multiple signatures and then only having to have one document instead of many copies has been great.", rating: 5 },
 ];
 
 // ============================================
-// FEATURED ARTICLES
+// FEATURED ARTICLES (unchanged)
 // ============================================
 
 const featuredArticles = [
@@ -99,52 +100,137 @@ export const metadata: Metadata = {
     title: "PDF Viewer | Open PDFs Online with Our Free PDF Reader",
     description: "Open and read PDFs online with this fast PDF viewer. Free, private, no signup required.",
     countryName: "India",
-    images: [{ url: `${SITE_URL}/aitools.png`, width: 1200, height: 630, alt: "idcardtools PDF Reader", type: "image/png" }],
+    images: [
+      {
+        url: `${SITE_URL}/og-image.png`, // ✅ consistent brand image
+        width: 1200,
+        height: 630,
+        alt: "idcardtools PDF Reader",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@idcardtools",
-    creator: "@idcardtools",
+    // ⚠️ Agar @idcardtools REAL handle nahi hai toh remove kar do
+    // site: "@idcardtools",
+    // creator: "@idcardtools",
     title: "PDF Viewer | Open PDFs Online with Our Free PDF Reader",
     description: "Open and read PDFs online with this fast PDF viewer. 100% private, no signup.",
-    images: [`${SITE_URL}/aitools.png`],
+    images: [`${SITE_URL}/og-image.png`],
   },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 // ============================================
 // STRUCTURED DATA
 // ============================================
 
+// ✅ FIXED: aggregateRating uses REAL visible reviews (6, not 2847)
+// ✅ FIXED: `review` array added with actual testimonials
+// ✅ FIXED: Added screenshot, featureList, applicationSubCategory
 const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "@id": `${PAGE_URL}#software`,
   name: "idcardtools PDF Reader",
-  description: "Free online PDF reader that works entirely in your browser.",
+  description: "Free online PDF reader that works entirely in your browser. View, search, zoom, print, and read PDFs aloud — no upload, no signup, 100% private.",
   url: PAGE_URL,
   applicationCategory: "BusinessApplication",
+  applicationSubCategory: "PDF Viewer",
   operatingSystem: "Web Browser",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-  aggregateRating: { "@type": "AggregateRating", ratingValue: "4.9", reviewCount: "2847" },
+  browserRequirements: "Requires JavaScript and a modern web browser (Chrome, Firefox, Safari, Edge)",
+
+  // ✅ Naya: features list
+  featureList: [
+    "Read PDFs in browser — no installation",
+    "Text-to-speech read-aloud",
+    "Search text within PDF",
+    "Page thumbnails sidebar",
+    "Zoom, rotate, print PDFs",
+    "Works on mobile and desktop",
+    "100% private — files never leave your device",
+  ],
+
+  // ✅ Naya: screenshot for rich display
+  screenshot: `${SITE_URL}/og-image.png`,
+
+  // ✅ Naya: offers with price
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "INR",
+    availability: "https://schema.org/InStock",
+  },
+
+  // ✅ FIXED: Real reviews + real count
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5.0",         // all 6 are 5★ → 5.0
+    reviewCount: String(testimonials.length), // "6"
+    bestRating: "5",
+    worstRating: "1",
+  },
+
+  // ✅ FIXED: Actual reviews from testimonials array
+  review: testimonials.map((t) => ({
+    "@type": "Review",
+    author: { "@type": "Person", name: t.name },
+    datePublished: t.date,
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: String(t.rating),
+      bestRating: "5",
+      worstRating: "1",
+    },
+    reviewBody: t.text,
+  })),
 };
 
+// ✅ HowTo (Note: Google deprecated HowTo rich results Sept 2023 — valid, but no rich display)
 const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
+  "@id": `${PAGE_URL}#howto`,
   name: "How to Read a PDF Online",
-  step: howToSteps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.name, text: s.text })),
+  description: "Read any PDF file in your browser in three simple steps — no installation, no signup required.",
+  totalTime: "PT1M",
+  tool: [{ "@type": "HowToTool", name: "Any modern web browser" }],
+  step: howToSteps.map((s, i) => ({
+    "@type": "HowToStep",
+    position: i + 1,
+    name: s.name,
+    text: s.text,
+    url: `${PAGE_URL}#step-${i + 1}`,
+  })),
 };
 
+// ✅ FAQ (Note: Google restricted FAQ rich results to govt/health sites — valid but no rich display)
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqItems.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })),
+  "@id": `${PAGE_URL}#faq`,
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
 };
 
+// ✅ Breadcrumb (already correct)
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": `${PAGE_URL}#breadcrumb`,
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
     { "@type": "ListItem", position: 2, name: "PDF Tools", item: `${SITE_URL}/pdf-tools` },
@@ -165,370 +251,281 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
-     
-              <PDFReaderClient />
-        
-        
+      <PDFReaderClient />
 
-        {/* ============================================
-            FEATURES
-        ============================================ */}
-        <section className="border-y border-black/[0.08] bg-white py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-7">
-                <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                  Features — Why Choose Us
-                </div>
-                <h2
-                  className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  Everything you need.
-                  <br />
-                  <span className="italic text-[#ff6a00]">Nothing</span> you don&apos;t.
-                </h2>
-              </div>
-              <div className="lg:col-span-5 lg:pb-4">
-                <p className="max-w-md text-[15px] leading-[1.7] text-black/60">
-                  Everything you need to read, view, and work with PDFs — packed into one fast, private, browser-based tool.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[18px] border border-black/[0.08] bg-black/[0.08] md:grid-cols-2 lg:grid-cols-3">
-              {luminFeatures.map((feature, i) => (
-                <div
-                  key={feature.title}
-                  className="group relative bg-white p-8 transition-colors duration-300 hover:bg-[#faf8f3]"
-                >
-                  <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-[#ff6a00]">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <h3
-                    className="mb-3 text-[20px] leading-tight tracking-[-0.01em]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {feature.title}
-                  </h3>
-                  <p className="text-[13px] leading-[1.7] text-black/55">
-                    {feature.description}
-                  </p>
-                  <span className="absolute right-8 top-8 text-black/10 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#ff6a00]">
-                    →
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================
-            HOW TO USE
-        ============================================ */}
-        <section className="py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mb-16 max-w-2xl">
+      {/* FEATURES — unchanged */}
+      <section className="border-y border-black/[0.08] bg-white py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
               <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                Process — How It Works
+                Features — Why Choose Us
               </div>
-              <h2
-                className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]"
-                style={{ fontFamily: 'Georgia, serif' }}
-              >
-                Read any PDF in
+              <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]" style={{ fontFamily: 'Georgia, serif' }}>
+                Everything you need.
                 <br />
-                <span className="italic text-[#ff6a00]">three</span> simple steps.
+                <span className="italic text-[#ff6a00]">Nothing</span> you don&apos;t.
               </h2>
-              <p className="mt-6 max-w-md text-[15px] leading-[1.7] text-black/60">
-                No downloads. No signup. Just upload and read — takes less than 20 seconds.
+            </div>
+            <div className="lg:col-span-5 lg:pb-4">
+              <p className="max-w-md text-[15px] leading-[1.7] text-black/60">
+                Everything you need to read, view, and work with PDFs — packed into one fast, private, browser-based tool.
               </p>
             </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {howToSteps.map((step, i) => (
-                <div
-                  key={step.name}
-                  className="relative rounded-[18px] border border-black/[0.08] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]"
-                >
-                  <div className="mb-8 flex items-center justify-between">
-                    <div
-                      className="text-[48px] leading-none text-[#ff6a00]"
-                      style={{ fontFamily: 'Georgia, serif' }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </div>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/30">
-                      Step
-                    </span>
-                  </div>
-                  <h3
-                    className="mb-3 text-[20px] leading-tight tracking-[-0.01em]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {step.name}
-                  </h3>
-                  <p className="text-[13px] leading-[1.7] text-black/55">{step.text}</p>
-                </div>
-              ))}
-            </div>
           </div>
-        </section>
 
-        {/* ============================================
-            CONTENT SECTIONS (2-col editorial)
-        ============================================ */}
-        <section className="border-y border-black/[0.08] bg-white py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mb-16 max-w-2xl">
-              <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                Editorial — Deep Dive
-              </div>
-              <h2
-                className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px]"
-                style={{ fontFamily: 'Georgia, serif' }}
-              >
-                More than <span className="italic text-[#ff6a00]">just</span> a viewer.
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 gap-x-16 gap-y-12 md:grid-cols-2">
-              {[
-                { title: "Enhance Your Digital Documents", desc: "Our PDF Reader is more than it may seem. View, search, print, and download PDFs online. For compression, conversion, or advanced editing, use our other PDF tools from the same platform." },
-                { title: "Secure Connection", desc: "All idcardtools tools use 256-bit TLS encryption to protect your documents during transfer. Our PDF Reader processes files locally in your browser, so your PDF never leaves your device." },
-                { title: "Offline PDF Reader", desc: "If you prefer reading your PDF documents offline or don't always have access to the internet, you can continue reading after the page and file are loaded. The PDF stays in your browser memory." },
-                { title: "Universally Compatible", desc: "As an online PDF Reader, you can use this tool with any web browser on any operating system, including mobile devices. It also works with scanned documents." },
-                { title: "Read PDFs in Any Browser", desc: "Whether you're using Chrome, Firefox, Safari, or Edge, our PDF viewer works seamlessly across all major browsers. There's nothing to install or configure." },
-                { title: "Mobile PDF Reader", desc: "Access your PDFs on the go with full mobile support. Our online reader adapts to your smartphone or tablet screen, making it easy to read documents wherever you are." },
-              ].map((item, i) => (
-                <div key={item.title} className="border-t border-black/[0.12] pt-6">
-                  <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#ff6a00]">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <h3
-                    className="mb-3 text-[22px] leading-tight tracking-[-0.01em]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p className="text-[13px] leading-[1.75] text-black/55">{item.desc}</p>
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[18px] border border-black/[0.08] bg-black/[0.08] md:grid-cols-2 lg:grid-cols-3">
+            {luminFeatures.map((feature, i) => (
+              <div key={feature.title} className="group relative bg-white p-8 transition-colors duration-300 hover:bg-[#faf8f3]">
+                <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-[#ff6a00]">
+                  {String(i + 1).padStart(2, '0')}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================
-            TESTIMONIALS
-        ============================================ */}
-        <section className="py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-7">
-                <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                  Testimonials — What They Say
-                </div>
-                <h2
-                  className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  Trusted by
-                  <br />
-                  <span className="italic text-[#ff6a00]">100 million+</span> users.
-                </h2>
-              </div>
-              <div className="lg:col-span-5 lg:pb-4">
-                <p className="max-w-md text-[15px] leading-[1.7] text-black/60">
-                  1,500+ verified reviews on G2, Trustpilot, and Capterra.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((t) => (
-                <div
-                  key={t.name}
-                  className="group flex flex-col justify-between rounded-[18px] border border-black/[0.08] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]"
-                >
-                  <div className="mb-5 flex items-center gap-1 text-[#ff6a00]">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <span key={i} className="text-[14px]">★</span>
-                    ))}
-                  </div>
-                  <p
-                    className="text-[15px] leading-[1.6] text-black/80"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    &ldquo;{t.text}&rdquo;
-                  </p>
-                  <div className="mt-6 flex items-center justify-between border-t border-black/[0.08] pt-5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff6a00] text-[12px] font-medium text-white">
-                        {t.name.charAt(0)}
-                      </div>
-                      <span className="text-[12px] font-medium text-black">{t.name}</span>
-                    </div>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-black/40">
-                      {t.date}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================
-            FEATURED ARTICLES
-        ============================================ */}
-        <section className="border-y border-black/[0.08] bg-white py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-7">
-                <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                  Journal — Featured Articles
-                </div>
-                <h2
-                  className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  From the <span className="italic text-[#ff6a00]">reading</span> room.
-                </h2>
-              </div>
-              <div className="lg:col-span-5 lg:pb-4">
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black/60 transition-colors hover:text-[#ff6a00]"
-                >
-                  View all articles →
-                </a>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              {featuredArticles.map((article) => (
-                <a
-                  key={article.title}
-                  href={article.link}
-                  className="group flex flex-col border-t border-black/[0.12] pt-6"
-                >
-                  <div className="mb-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
-                    <span>{article.category}</span>
-                    <span>{article.date}</span>
-                  </div>
-                  <h3
-                    className="mb-4 text-[22px] leading-[1.15] tracking-[-0.01em] transition-colors duration-300 group-hover:text-[#ff6a00]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {article.title}
-                  </h3>
-                  <p className="mb-6 flex-1 text-[13px] leading-[1.7] text-black/55">
-                    {article.excerpt}
-                  </p>
-                  <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-colors group-hover:text-[#ff6a00]">
-                    Read more
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================
-            FAQ
-        ============================================ */}
-        <section className="py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-              {/* Left sticky */}
-              <div className="lg:col-span-4">
-                <div className="lg:sticky lg:top-8">
-                  <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                    FAQ — Questions
-                  </div>
-                  <h2
-                    className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[48px]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    Things you
-                    <br />
-                    <span className="italic text-[#ff6a00]">might ask.</span>
-                  </h2>
-                  <p className="mt-6 max-w-xs text-[14px] leading-[1.7] text-black/55">
-                    Everything you need to know about our PDF Reader. Can&apos;t find an answer? Reach out anytime.
-                  </p>
-                </div>
-              </div>
-
-              {/* Right accordion */}
-              <div className="lg:col-span-8">
-                <div className="divide-y divide-black/[0.08] border-y border-black/[0.08]">
-                  {faqItems.map((item, i) => (
-                    <details key={item.q} className="group">
-                      <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 transition-colors hover:text-[#ff6a00]">
-                        <div className="flex items-baseline gap-4">
-                          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/30 group-open:text-[#ff6a00]">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          <span
-                            className="text-[16px] leading-tight text-black group-open:text-[#ff6a00] md:text-[17px]"
-                            style={{ fontFamily: 'Georgia, serif' }}
-                          >
-                            {item.q}
-                          </span>
-                        </div>
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-black/[0.15] text-black/60 transition-all duration-300 group-open:rotate-45 group-open:border-[#ff6a00] group-open:bg-[#ff6a00] group-open:text-white">
-                          +
-                        </span>
-                      </summary>
-                      <p className="pb-6 pl-10 pr-12 text-[13px] leading-[1.75] text-black/55">
-                        {item.a}
-                      </p>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================
-            CTA
-        ============================================ */}
-        <section className="border-t border-black/[0.08] bg-white py-24">
-          <div className="container mx-auto max-w-[1400px] px-8">
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
-                Get Started — It&apos;s Free
-              </div>
-              <h2
-                className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[56px]"
-                style={{ fontFamily: 'Georgia, serif' }}
-              >
-                Ready to read
-                <br />
-                your <span className="italic text-[#ff6a00]">PDF</span>?
-              </h2>
-              <p className="mx-auto mt-6 max-w-xl text-[15px] leading-[1.7] text-black/60">
-                Join millions of users who read, view, and work with PDFs every day — free, fast, and 100% private.
-              </p>
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                <a
-                  href="#reader"
-                  className="group inline-flex items-center gap-3 rounded-full bg-black px-8 py-3.5 text-[13px] font-medium text-white transition-colors duration-300 hover:bg-[#ff6a00]"
-                >
-                  Open PDF Reader
-                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                </a>
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-black/40">
-                  No signup required
+                <h3 className="mb-3 text-[20px] leading-tight tracking-[-0.01em]" style={{ fontFamily: 'Georgia, serif' }}>
+                  {feature.title}
+                </h3>
+                <p className="text-[13px] leading-[1.7] text-black/55">{feature.description}</p>
+                <span className="absolute right-8 top-8 text-black/10 transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#ff6a00]">
+                  →
                 </span>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW TO USE — unchanged */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mb-16 max-w-2xl">
+            <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+              Process — How It Works
+            </div>
+            <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]" style={{ fontFamily: 'Georgia, serif' }}>
+              Read any PDF in
+              <br />
+              <span className="italic text-[#ff6a00]">three</span> simple steps.
+            </h2>
+            <p className="mt-6 max-w-md text-[15px] leading-[1.7] text-black/60">
+              No downloads. No signup. Just upload and read — takes less than 20 seconds.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {howToSteps.map((step, i) => (
+              <div key={step.name} id={`step-${i + 1}`} className="relative rounded-[18px] border border-black/[0.08] bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]">
+                <div className="mb-8 flex items-center justify-between">
+                  <div className="text-[48px] leading-none text-[#ff6a00]" style={{ fontFamily: 'Georgia, serif' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/30">Step</span>
+                </div>
+                <h3 className="mb-3 text-[20px] leading-tight tracking-[-0.01em]" style={{ fontFamily: 'Georgia, serif' }}>
+                  {step.name}
+                </h3>
+                <p className="text-[13px] leading-[1.7] text-black/55">{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTENT SECTIONS — unchanged */}
+      <section className="border-y border-black/[0.08] bg-white py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mb-16 max-w-2xl">
+            <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+              Editorial — Deep Dive
+            </div>
+            <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px]" style={{ fontFamily: 'Georgia, serif' }}>
+              More than <span className="italic text-[#ff6a00]">just</span> a viewer.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-x-16 gap-y-12 md:grid-cols-2">
+            {[
+              { title: "Enhance Your Digital Documents", desc: "Our PDF Reader is more than it may seem. View, search, print, and download PDFs online. For compression, conversion, or advanced editing, use our other PDF tools from the same platform." },
+              { title: "Secure Connection", desc: "All idcardtools tools use 256-bit TLS encryption to protect your documents during transfer. Our PDF Reader processes files locally in your browser, so your PDF never leaves your device." },
+              { title: "Offline PDF Reader", desc: "If you prefer reading your PDF documents offline or don't always have access to the internet, you can continue reading after the page and file are loaded. The PDF stays in your browser memory." },
+              { title: "Universally Compatible", desc: "As an online PDF Reader, you can use this tool with any web browser on any operating system, including mobile devices. It also works with scanned documents." },
+              { title: "Read PDFs in Any Browser", desc: "Whether you're using Chrome, Firefox, Safari, or Edge, our PDF viewer works seamlessly across all major browsers. There's nothing to install or configure." },
+              { title: "Mobile PDF Reader", desc: "Access your PDFs on the go with full mobile support. Our online reader adapts to your smartphone or tablet screen, making it easy to read documents wherever you are." },
+            ].map((item, i) => (
+              <div key={item.title} className="border-t border-black/[0.12] pt-6">
+                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#ff6a00]">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <h3 className="mb-3 text-[22px] leading-tight tracking-[-0.01em]" style={{ fontFamily: 'Georgia, serif' }}>
+                  {item.title}
+                </h3>
+                <p className="text-[13px] leading-[1.75] text-black/55">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS — unchanged rendering, but schema references these */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
+              <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+                Testimonials — What They Say
+              </div>
+              <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]" style={{ fontFamily: 'Georgia, serif' }}>
+                Trusted by
+                <br />
+                <span className="italic text-[#ff6a00]">100 million+</span> users.
+              </h2>
+            </div>
+            <div className="lg:col-span-5 lg:pb-4">
+              <p className="max-w-md text-[15px] leading-[1.7] text-black/60">
+                1,500+ verified reviews on G2, Trustpilot, and Capterra.
+              </p>
             </div>
           </div>
-        </section>
- 
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((t) => (
+              <div key={t.name} className="group flex flex-col justify-between rounded-[18px] border border-black/[0.08] bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]">
+                <div className="mb-5 flex items-center gap-1 text-[#ff6a00]">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <span key={i} className="text-[14px]">★</span>
+                  ))}
+                </div>
+                <p className="text-[15px] leading-[1.6] text-black/80" style={{ fontFamily: 'Georgia, serif' }}>
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                <div className="mt-6 flex items-center justify-between border-t border-black/[0.08] pt-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff6a00] text-[12px] font-medium text-white">
+                      {t.name.charAt(0)}
+                    </div>
+                    <span className="text-[12px] font-medium text-black">{t.name}</span>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-black/40">
+                    {t.date}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED ARTICLES — unchanged */}
+      <section className="border-y border-black/[0.08] bg-white py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
+              <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+                Journal — Featured Articles
+              </div>
+              <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[52px] lg:text-[60px]" style={{ fontFamily: 'Georgia, serif' }}>
+                From the <span className="italic text-[#ff6a00]">reading</span> room.
+              </h2>
+            </div>
+            <div className="lg:col-span-5 lg:pb-4">
+              <a href="#" className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black/60 transition-colors hover:text-[#ff6a00]">
+                View all articles →
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {featuredArticles.map((article) => (
+              <a key={article.title} href={article.link} className="group flex flex-col border-t border-black/[0.12] pt-6">
+                <div className="mb-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-black/40">
+                  <span>{article.category}</span>
+                  <span>{article.date}</span>
+                </div>
+                <h3 className="mb-4 text-[22px] leading-[1.15] tracking-[-0.01em] transition-colors duration-300 group-hover:text-[#ff6a00]" style={{ fontFamily: 'Georgia, serif' }}>
+                  {article.title}
+                </h3>
+                <p className="mb-6 flex-1 text-[13px] leading-[1.7] text-black/55">{article.excerpt}</p>
+                <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-colors group-hover:text-[#ff6a00]">
+                  Read more
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ — unchanged */}
+      <section className="py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-8">
+                <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+                  FAQ — Questions
+                </div>
+                <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[48px]" style={{ fontFamily: 'Georgia, serif' }}>
+                  Things you
+                  <br />
+                  <span className="italic text-[#ff6a00]">might ask.</span>
+                </h2>
+                <p className="mt-6 max-w-xs text-[14px] leading-[1.7] text-black/55">
+                  Everything you need to know about our PDF Reader. Can&apos;t find an answer? Reach out anytime.
+                </p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-8">
+              <div className="divide-y divide-black/[0.08] border-y border-black/[0.08]">
+                {faqItems.map((item, i) => (
+                  <details key={item.q} className="group">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 transition-colors hover:text-[#ff6a00]">
+                      <div className="flex items-baseline gap-4">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-black/30 group-open:text-[#ff6a00]">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-[16px] leading-tight text-black group-open:text-[#ff6a00] md:text-[17px]" style={{ fontFamily: 'Georgia, serif' }}>
+                          {item.q}
+                        </span>
+                      </div>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-black/[0.15] text-black/60 transition-all duration-300 group-open:rotate-45 group-open:border-[#ff6a00] group-open:bg-[#ff6a00] group-open:text-white">
+                        +
+                      </span>
+                    </summary>
+                    <p className="pb-6 pl-10 pr-12 text-[13px] leading-[1.75] text-black/55">{item.a}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA — unchanged */}
+      <section className="border-t border-black/[0.08] bg-white py-24">
+        <div className="container mx-auto max-w-[1400px] px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-5 font-mono text-[11px] uppercase tracking-[0.25em] text-black/40">
+              Get Started — It&apos;s Free
+            </div>
+            <h2 className="text-[40px] leading-[1.02] tracking-[-0.02em] md:text-[56px]" style={{ fontFamily: 'Georgia, serif' }}>
+              Ready to read
+              <br />
+              your <span className="italic text-[#ff6a00]">PDF</span>?
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-[15px] leading-[1.7] text-black/60">
+              Join millions of users who read, view, and work with PDFs every day — free, fast, and 100% private.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              <a href="#reader" className="group inline-flex items-center gap-3 rounded-full bg-black px-8 py-3.5 text-[13px] font-medium text-white transition-colors duration-300 hover:bg-[#ff6a00]">
+                Open PDF Reader
+                <span className="transition-transform group-hover:translate-x-0.5">→</span>
+              </a>
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-black/40">
+                No signup required
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
