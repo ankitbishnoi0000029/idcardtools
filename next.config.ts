@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['pdfjs-dist'],
-  },
   webpack(config, { isServer, webpack }) {
     if (!isServer) {
       config.resolve.alias = {
@@ -20,6 +17,22 @@ const nextConfig: NextConfig = {
     }
 
     return config;
+  },
+  async headers() {
+    return [
+      {
+        source: "/pdf.worker.min.mjs",
+        headers: [
+          { key: "Content-Type", value: "text/javascript" },
+        ],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Content-Type", value: "text/javascript" },
+        ],
+      },
+    ];
   },
 };
 

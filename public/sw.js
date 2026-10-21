@@ -17,11 +17,17 @@ self.addEventListener("fetch", (event) => {
       caches.match(event.request).then((cached) => {
         if (cached) return cached;
         return fetch(event.request).then((res) => {
-          if (res.ok) {
-            const clone = res.clone();
-            caches.open(CACHE).then((c) => c.put(event.request, clone));
-          }
-          return res;
+          if (!res.ok) return res;
+          const headers = new Headers(res.headers);
+          headers.set("Content-Type", "text/javascript");
+          const fixed = new Response(res.body, {
+            status: res.status,
+            statusText: res.statusText,
+            headers,
+          });
+          const clone = fixed.clone();
+          caches.open(CACHE).then((c) => c.put(event.request, clone));
+          return fixed;
         });
       })
     );
