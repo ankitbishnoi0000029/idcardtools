@@ -98,14 +98,14 @@ export const metadata: Metadata = {
     },
   },
 
-  // FIXED: theme-color/viewport fields yahan NAHI (viewport export mein hain)
+  // theme-color/viewport fields yahan NAHI (viewport export mein hain)
   other: {
     "format-detection": "telephone=no",
     "msapplication-TileColor": "#ff6a00",
     "msapplication-config": "/browserconfig.xml",
   },
 
-  // FIXED: public/manifest.json ke saath match
+  // public/manifest.json ke saath match
   manifest: "/manifest.json",
 
   appLinks: {
@@ -134,8 +134,35 @@ export default function RootLayout({
     <html
       lang="en-IN"
       dir="ltr"
+      suppressHydrationWarning
     >
       <head>
+        {/* Pre-hydration cleanup: strip browser-extension-injected attributes
+            (e.g. CRXLauncher adds "crxlauncher" / "crxlauncher-bridged" to <html>)
+            BEFORE React hydrates, preventing hydration mismatch warnings. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var attrs = ['crxlauncher', 'crxlauncher-bridged'];
+                  var root = document.documentElement;
+                  attrs.forEach(function(a) { root.removeAttribute(a); });
+                  var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(m) {
+                      if (m.type === 'attributes' && attrs.indexOf(m.attributeName) !== -1) {
+                        root.removeAttribute(m.attributeName);
+                      }
+                    });
+                  });
+                  observer.observe(root, { attributes: true });
+                  setTimeout(function() { observer.disconnect(); }, 5000);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+
         <link
           rel="preconnect"
           href="https://fonts.googleapis.com"
@@ -160,7 +187,7 @@ export default function RootLayout({
               name: "idcardtools",
               alternateName: ["ID Card Tools", "idcardtools.com"],
               url: SITE_URL,
-              logo: `${SITE_URL}/icons/icon-512.png`, // FIXED: PNG, not ICO
+              logo: `${SITE_URL}/icons/icon-512.png`,
               description: SITE_DESCRIPTION,
             }),
           }}

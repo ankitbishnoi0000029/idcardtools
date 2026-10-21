@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['pdfjs-dist'],
+  },
   webpack(config, { isServer, webpack }) {
     if (!isServer) {
       config.resolve.alias = {
