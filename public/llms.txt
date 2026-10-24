@@ -6,6 +6,8 @@
 
 - [Home](https://idcardtools.com): E-Aadhaar PVC card printing and free online document and image tools.
 - [E-Aadhaar PVC Card](https://idcardtools.com/e-aadhaar): Print your E-Aadhaar on a UIDAI-compliant 600-micron PVC card.
+- [PAN Card PVC](https://idcardtools.com/pan-card-pvc): Print your PAN card on a premium PVC card.
+- [Voter ID PVC](https://idcardtools.com/voter-pvc): Print your Voter ID on a premium PVC card.
 - [PDF Tools](https://idcardtools.com/pdf-tools): 30 free PDF tools to merge, split, compress, convert, edit, sign, and protect documents.
 - [Image Tools](https://idcardtools.com/image-tools): 30 free image tools to convert, resize, crop, compress, and edit photos.
 - [Blog](https://idcardtools.com/blog): Guides on PDF tools, document privacy, and E-Aadhaar PVC cards.

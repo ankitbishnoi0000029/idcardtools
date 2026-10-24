@@ -13,6 +13,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://idcardtools.com/pan-card-pvc</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://idcardtools.com/voter-pvc</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://idcardtools.com/about</loc>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>

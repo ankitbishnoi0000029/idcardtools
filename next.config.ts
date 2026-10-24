@@ -21,9 +21,9 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/pdf.worker.min.mjs",
+        source: "/pdf.worker.min.js",
         headers: [
-          { key: "Content-Type", value: "text/javascript" },
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
         ],
       },
       {

@@ -17,10 +17,7 @@ type Anchor = { str: string; x: number; y: number; w: number };
 // Sirf horizontal text lein (vertical text jaise "Aadhaar No. Issued" ko chhod dein)
 const isHorizontal = (it: any) => Math.abs(it.transform[1]) < 0.01;
 
-export async function findCardBoxes(
-  page: PDFPageProxy,
-  viewport: PageViewport
-): Promise<{ front: Box; back: Box } | null> {
+export async function findCardBoxes(page: PDFPageProxy, viewport: PageViewport): Promise<{ front: Box; back: Box } | null> {
   const tc = await page.getTextContent();
   const W = viewport.width;
   const H = viewport.height;
@@ -58,12 +55,7 @@ export async function findCardBoxes(
   }
 
   // Top aur bottom anchor ki y-distance se card ki height, phir ratio se width
-  const build = (
-    top: Anchor,
-    bottom: Anchor,
-    layout: { topFrac: number; bottomFrac: number },
-    right: boolean
-  ): Box | null => {
+  const build = (top: Anchor, bottom: Anchor, layout: { topFrac: number; bottomFrac: number }, right: boolean): Box | null => {
     const hc = (bottom.y - top.y) / (layout.bottomFrac - layout.topFrac);
     if (!isFinite(hc) || hc <= 0) return null;
     const wc = hc * CARD_RATIO;
@@ -71,9 +63,7 @@ export async function findCardBoxes(
 
     // Card ka horizontal center: is side ke text ke center ka median
     // (median se logo/outlier text ka asar kam hota hai)
-    const inRange = sideOf(!right).filter(
-      (a) => a.y >= top.y - 2 && a.y <= bottom.y + 2
-    );
+    const inRange = sideOf(!right).filter((a) => a.y >= top.y - 2 && a.y <= bottom.y + 2);
     const centers = inRange.map((a) => a.x + a.w / 2).sort((p, q) => p - q);
     const cx = centers.length ? centers[Math.floor(centers.length / 2)] : (top.x + bottom.x) / 2;
 

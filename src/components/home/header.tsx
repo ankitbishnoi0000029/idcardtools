@@ -282,6 +282,7 @@ export const Header = () => {
       group: "image" as const,
       defaultCategory: "image-ai",
     },
+        { name: "Pan Pvc", href: "/pan-card-pvc" },
     { name: "Contacts", href: "/contacts" },
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
@@ -308,7 +309,7 @@ export const Header = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
         style={{ paddingTop: headerPadding, paddingBottom: headerPadding }}
-        className="fixed top-0 left-0 w-full z-50 px-6 md:px-8 transition-all duration-500"
+        className="fixed top-0 left-0 w-full z-100 px-6 md:px-8 transition-all duration-500"
         onMouseLeave={() => closeToolsMenu(120)}
       >
         {/* Scroll-based background */}
@@ -872,7 +873,7 @@ export const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 32 }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-[#f4f1ea] z-50 lg:hidden border-l border-black/[0.1] flex flex-col overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-[#f4f1ea] z-100 lg:hidden border-l border-black/[0.1] flex flex-col overflow-y-auto"
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-black/[0.08]">
                 <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-black/40">Menu</span>
